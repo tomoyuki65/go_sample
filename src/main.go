@@ -11,7 +11,7 @@ func main() {
 	// JSON形式で「"message": "Hello World"」を出力するAPI
 	router.GET("/", func(c *gin.Context) {
     c.JSON(200, gin.H{
-      "message": "Hello World",
+      "message": "Hello World !!",
     })
 	})
 
