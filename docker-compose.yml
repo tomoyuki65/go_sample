@@ -1,0 +1,29 @@
+version: '3'
+services:
+  # APIに関する設定
+  api:
+    container_name: go_sample_api
+    build:
+      context: .
+      dockerfile: ./src/docker/dev/Dockerfile
+    env_file:
+      - ./.env
+    command: go run main.go
+    volumes:
+      - ./src:/go/src
+    tty: true
+    stdin_open: true
+    ports:
+      - "3001:3001"
+  # Webサーバーに関する設定
+  web:
+    container_name: go_sample_web
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    volumes:
+      - ./nginx/log:/var/log/nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - api

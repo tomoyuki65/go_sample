@@ -1,0 +1,21 @@
+2023/03/23 14:51:22 [notice] 1#1: using the "epoll" event method
+2023/03/23 14:51:22 [notice] 1#1: nginx/1.23.3
+2023/03/23 14:51:22 [notice] 1#1: built by gcc 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
+2023/03/23 14:51:22 [notice] 1#1: OS: Linux 5.10.124-linuxkit
+2023/03/23 14:51:22 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2023/03/23 14:51:22 [notice] 1#1: start worker processes
+2023/03/23 14:51:22 [notice] 1#1: start worker process 8
+2023/03/23 14:51:22 [notice] 1#1: start worker process 9
+2023/03/23 15:00:53 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
+2023/03/23 15:00:53 [notice] 8#8: gracefully shutting down
+2023/03/23 15:00:53 [notice] 8#8: exiting
+2023/03/23 15:00:53 [notice] 9#9: gracefully shutting down
+2023/03/23 15:00:53 [notice] 8#8: exit
+2023/03/23 15:00:53 [notice] 9#9: exiting
+2023/03/23 15:00:53 [notice] 9#9: exit
+2023/03/23 15:00:53 [notice] 1#1: signal 17 (SIGCHLD) received from 8
+2023/03/23 15:00:53 [notice] 1#1: worker process 8 exited with code 0
+2023/03/23 15:00:53 [notice] 1#1: signal 29 (SIGIO) received
+2023/03/23 15:00:53 [notice] 1#1: signal 17 (SIGCHLD) received from 9
+2023/03/23 15:00:53 [notice] 1#1: worker process 9 exited with code 0
+2023/03/23 15:00:53 [notice] 1#1: exit
