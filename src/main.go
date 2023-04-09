@@ -1,19 +1,10 @@
 package main
 
 import (
-	// Ginをインポート
-	"github.com/gin-gonic/gin"
+  "go_sample/router"
 )
 
 func main() {
-  router := gin.Default()
-
-	// JSON形式で「"message": "Hello World"」を出力するAPI
-	router.GET("/", func(c *gin.Context) {
-    c.JSON(200, gin.H{
-      "message": "Hello World !!",
-    })
-	})
-
-	router.Run(":3001")
+  // routerの初期化
+  router.Init()
 }
