@@ -7,6 +7,7 @@ import (
   "github.com/fsnotify/fsnotify"
 )
 
+// config設定の構造体
 type Config struct {
   Env     string
   Tz      string
