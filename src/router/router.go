@@ -15,6 +15,7 @@ func Init() {
 	// APIの設定
 	apiV1 := router.Group("/api/v1")
 	apiV1.GET("/config", controller.ConfigIndex)
+  apiV1.GET("/users", controller.UsersIndex)
 
   // routerを起動
   router.Run(":3001")
