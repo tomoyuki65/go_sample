@@ -4,6 +4,9 @@ FROM golang:1.20.2-alpine
 # ホットリロード用にAirをインストール
 RUN go install github.com/cosmtrek/air@latest
 
+# マイグレーション用にglang-migrate（MySQL）をインストール
+RUN go install -tags mysql github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
 # インストール可能なパッケージ一覧の更新
 RUN apk update && \
     apk upgrade && \
