@@ -3,6 +3,7 @@ Go言語でAPIを開発するためのサンプルファイルです。
 
 ## 機能一覧  
 ・configの設定値を取得するAPI（/api/v1/config）  
+・usersテーブルの全レコードを取得するAPI（/api/v1/users）  
 
 ## 使用技術  
 Go "1.20.2"  
