@@ -3,6 +3,7 @@ package model
 import (
   "time"
   "go_sample/database"
+  "errors"
 )
 
 // ユーザー情報の構造体
@@ -17,12 +18,17 @@ type User struct {
   DeletedAt *time.Time `json:"deleted_at"`
 }
 
-// DBからusersテーブルの全レコードを取得して返す関数
-func GetUsersAll() []User {
+// DBからusersテーブルの全レコードを取得
+func GetUsersAll() (*[]User, error) {
   db := database.GetDB()
 
-  var users []User
-  db.Find(&users)
+  var users *[]User
+  result := db.Find(&users)
+  if result.Error != nil {
+    return nil, result.Error
+  } else if result.RowsAffected == 0 {
+    return nil, errors.New("users not registerd")
+  }
 
-  return users
+  return users, nil
 }
