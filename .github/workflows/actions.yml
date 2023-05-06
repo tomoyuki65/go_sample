@@ -7,6 +7,9 @@ jobs:
   test:
     name: Run Postman Api Tests
     runs-on: ubuntu-latest
+    # 使用する環境変数定義の指定
+    environment: dev
+    # 処理の実行
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -19,12 +22,12 @@ jobs:
 
       - name: Add environment variable to .env
         run: |
-            echo ENV=dev >> .env
-            echo TZ=Asia/Tokyo >> .env
-            echo MYSQL_DATABASE=go_sample_db >> .env
-            echo MYSQL_USER=go_sample_user >> .env
-            echo MYSQL_PASSWORD=go_sample_password >> .env
-            echo MYSQL_ROOT_PASSWORD=go_sample_root_password >> .env
+            echo ENV=${{secrets.ENV}} >> .env
+            echo TZ=${{secrets.TZ}} >> .env
+            echo MYSQL_DATABASE=${{secrets.MYSQL_DATABASE}} >> .env
+            echo MYSQL_USER=${{secrets.MYSQL_USER}} >> .env
+            echo MYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}} >> .env
+            echo MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_ROOT_PASSWORD}} >> .env
 
       - name: docker compose build --no-cache
         run: docker compose build --no-cache
@@ -32,6 +35,7 @@ jobs:
       - name: docker compose up -d
         run: docker compose up -d
 
+      # 待機処理
       - name: sleeep 20
         run: sleep 20
 
