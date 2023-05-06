@@ -35,5 +35,8 @@ jobs:
       - name: sleeep 10
         run: sleep 10
 
+      - name: docker compose ps
+        run: docker compose ps
+
       - name: postman collection run
         run: postman collection run src/postman/go_sample_collection.postman_collection.json
