@@ -1,0 +1,330 @@
+{
+	"info": {
+		"_postman_id": "e546745a-de8a-46a2-be61-f4162e0ee4a9",
+		"name": "go_sample_collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24953044"
+	},
+	"item": [
+		{
+			"name": "Create User Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// リクエスト実行前にユーザー一覧からデータ件数を取得",
+							"pm.sendRequest(\"http://localhost/api/v1/users\", function (err, response) {",
+							"    const　beforeDataCount = response.json().length",
+							"    pm.variables.set(\"beforeDataCount\", beforeDataCount);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// リクエスト実行後にユーザー一覧からデータ件数を取得し、リクエスト実行前のデータ件数と比較",
+							"pm.sendRequest(\"http://localhost/api/v1/users\", function (err, response) {",
+							"    const beforeDataCount = pm.variables.get(\"beforeDataCount\");",
+							"    const afterDataCount  = response.json().length;",
+							"",
+							"    pm.test(\"ユーザーのデータ件数が１件増加\", function () {",
+							"        pm.expect(afterDataCount).to.eql(beforeDataCount + 1);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"uid\":\"uid:test3\",\"name\":\"test3\", \"email\":\"test3@example.com\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show User Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// リクエスト実行前にユーザー一覧から取得した最後のデータのidを変数「paramId」に設定",
+							"pm.sendRequest(\"http://localhost/api/v1/users\", function (err, response) {",
+							"    const　lastUserData = response.json().pop()",
+							"    pm.variables.set(\"paramId\", lastUserData.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// パラメータ「id」が「paramId」のユーザーのレスポンスの結果を確認",
+							"pm.test(\"id == paramId\", function () {",
+							"    const paramId = pm.variables.get(\"paramId\");",
+							"    pm.expect(pm.response.json().id).to.eql(paramId);",
+							"});",
+							"pm.test(\"uid == uid:test3\", function () {",
+							"    pm.expect(pm.response.json().uid).to.eql(\"uid:test3\");",
+							"});",
+							"pm.test(\"name == test3\", function () {",
+							"    pm.expect(pm.response.json().name).to.eql(\"test3\");",
+							"});",
+							"pm.test(\"email == test3@example.com\", function () {",
+							"    pm.expect(pm.response.json().email).to.eql(\"test3@example.com\");",
+							"});",
+							"pm.test(\"created_at is not null\", function () {",
+							"    pm.expect(pm.response.json().created_at).not.eql(null);",
+							"});",
+							"pm.test(\"updated_at is not null\", function () {",
+							"    pm.expect(pm.response.json().updated_at).not.eql(null);",
+							"});",
+							"pm.test(\"deleted_at is null\", function () {",
+							"    pm.expect(pm.response.json().deleted_at).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/api/v1/users/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{paramId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// リクエスト実行前にユーザー一覧から取得した最後のデータを変数に設定",
+							"pm.sendRequest(\"http://localhost/api/v1/users\", function (err, response) {",
+							"    const　lastUserData = response.json().pop()",
+							"    pm.variables.set(\"paramId\", lastUserData.id);",
+							"    pm.variables.set(\"beforeUser\", lastUserData);",
+							"",
+							"    // updated_atの更新を確認するため1秒だけ待機させる",
+							"    const sleep = waitTime => new Promise( resolve => setTimeout(resolve, waitTime) );",
+							"    sleep(1000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// リクエスト実行後にユーザー一覧から取得した最後のデータとリクエスト実行前のデータを比較",
+							"pm.sendRequest(\"http://localhost/api/v1/users\", function (err, response) {",
+							"    const beforeUser = pm.variables.get(\"beforeUser\");",
+							"    const afterUser  = response.json().pop()",
+							"",
+							"    pm.test(\"リクエスト実行前後でidが更新されていないこと\", function () {",
+							"        pm.expect(afterUser.id).to.eql(beforeUser.id);",
+							"    });",
+							"    pm.test(\"リクエスト実行前後でuidが更新されていないこと\", function () {",
+							"        pm.expect(afterUser.uid).to.eql(beforeUser.uid);",
+							"    });",
+							"    pm.test(\"リクエスト実行後にnameが「Sample_User_3」更新されていること\", function () {",
+							"        pm.expect(afterUser.name).to.eql(\"Sample_User_3\");",
+							"    });",
+							"    pm.test(\"リクエスト実行前後でemailが更新されていないこと\", function () {",
+							"        pm.expect(afterUser.email).to.eql(beforeUser.email);",
+							"    });",
+							"    pm.test(\"リクエスト実行後はupdated_atが更新されていること\", function () {",
+							"        pm.expect(afterUser.updated_at　> beforeUser.updated_at).to.eql(true);",
+							"    });",
+							"    pm.test(\"リクエスト実行後にdeleted_atがnullであること\", function () {",
+							"        pm.expect(afterUser.deleted_at).to.eql(null);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"Sample_User_3\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/v1/users/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{paramId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// リクエスト実行前にユーザー一覧からデータ件数と最後のデータを取得し、変数に設定",
+							"pm.sendRequest(\"http://localhost/api/v1/users\", function (err, response) {",
+							"    const　beforeDataCount = response.json().length",
+							"    const　lastUserData = response.json().pop()",
+							"",
+							"    pm.variables.set(\"beforeDataCount\", beforeDataCount);",
+							"    pm.variables.set(\"paramId\", lastUserData.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// リクエスト実行後にユーザー一覧からデータ件数を取得し、リクエスト実行前のデータ件数と比較",
+							"pm.sendRequest(\"http://localhost/api/v1/users\", function (err, response) {",
+							"    const beforeDataCount = pm.variables.get(\"beforeDataCount\");",
+							"    const afterDataCount  = response.json().length;",
+							"",
+							"    pm.test(\"ユーザーのデータ件数が１件減少\", function () {",
+							"        pm.expect(afterDataCount).to.eql(beforeDataCount - 1);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/api/v1/users/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{paramId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
