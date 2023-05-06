@@ -36,8 +36,8 @@ jobs:
         run: docker compose up -d
 
       # 待機処理
-      - name: sleeep 20
-        run: sleep 20
+      - name: sleeep 30
+        run: sleep 30
 
       - name: docker compose ps
         run: docker compose ps
