@@ -1,0 +1,36 @@
+name: go_sample github actions
+
+on:
+  push:
+
+jobs:
+  test:
+    name: Run Postman Api Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Postman CLI install
+        run: curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Create .env
+        run: touch .env
+
+      - name: Add environment variable to .env
+        run: |
+            echo ENV=${{secrets.ENV}} >> .env
+            echo TZ=${{secrets.TZ}} >> .env
+            echo MYSQL_DATABASE=${{secrets.MYSQL_DATABASE}} >> .env
+            echo MYSQL_USER=${{secrets.MYSQL_USER}} >> .env
+            echo MYSQL_PASSWORD=${{secrets.MYSQL_DATABASE}} >> .env
+            echo MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_DATABASE}} >> .env
+
+      - name: docker compose build --no-cache
+        run: docker compose build --no-cache
+
+      - name: docker compose up -d
+        run: docker compose up -d
+
+      - name: postman collection run
+        run: postman collection run src/postman/go_sample_collection.postman_collection.json
