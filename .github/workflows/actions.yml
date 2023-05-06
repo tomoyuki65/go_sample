@@ -32,8 +32,8 @@ jobs:
       - name: docker compose up -d
         run: docker compose up -d
 
-      - name: sleeep 10
-        run: sleep 10
+      - name: sleeep 30
+        run: sleep 30
 
       - name: docker compose ps
         run: docker compose ps
