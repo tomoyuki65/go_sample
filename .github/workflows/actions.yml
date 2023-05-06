@@ -32,11 +32,14 @@ jobs:
       - name: docker compose up -d
         run: docker compose up -d
 
-      - name: sleeep 30
-        run: sleep 30
+      - name: sleeep 20
+        run: sleep 20
 
       - name: docker compose ps
         run: docker compose ps
+
+      - name: docker compose exec api go run cmd/seeder.go
+        run: docker compose exec api go run cmd/seeder.go
 
       - name: postman collection run
         run: postman collection run src/postman/go_sample_collection.postman_collection.json
