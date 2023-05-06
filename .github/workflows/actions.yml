@@ -17,6 +17,7 @@ jobs:
       - name: Postman CLI install
         run: curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
 
+      # .envの作成
       - name: Create .env
         run: touch .env
 
@@ -29,21 +30,21 @@ jobs:
             echo MYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}} >> .env
             echo MYSQL_ROOT_PASSWORD=${{secrets.MYSQL_ROOT_PASSWORD}} >> .env
 
+      # コンテナのビルドと起動
       - name: docker compose build --no-cache
         run: docker compose build --no-cache
 
       - name: docker compose up -d
         run: docker compose up -d
 
-      # 待機処理
+      # コンテナが立ち上がり切るまでの待機処理
       - name: sleeep 30
         run: sleep 30
 
-      - name: docker compose ps
-        run: docker compose ps
-
+      # seederの実行
       - name: docker compose exec api go run cmd/seeder.go
         run: docker compose exec api go run cmd/seeder.go
 
+      # テストの実行
       - name: postman collection run
         run: postman collection run src/postman/go_sample_collection.postman_collection.json
